@@ -1,4 +1,5 @@
 using Lumivate.TurtleStore.Models;
+using Lumivate.TurtleStore.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lumivate.TurtleStore.Controllers
@@ -120,4 +121,79 @@ namespace Lumivate.TurtleStore.Controllers
 	//   - Replace TurtleStoreContext with ITurtleService in the constructor
 	//   - Move all EF/DbContext logic into TurtleService and use _turtleService methods instead
 	//   - Your controller will look so clean after this!
+	public class TurtlesController : Controller
+	{
+		private readonly ITurtleService _turtleService;
+
+		public TurtlesController(ITurtleService turtleService)
+		{
+			_turtleService = turtleService;
+		}
+
+		public IActionResult Index()
+		{
+			var turtles = _turtleService.GetAllTurtles();
+			var viewModel = new TurtleViewModel { Turtles = turtles };
+			return View(viewModel);
+		}
+
+		public IActionResult Details(int id)
+		{
+			var turtle = _turtleService.GetTurtleById(id);
+			if (turtle == null)
+			{
+				return NotFound();
+			}
+			return View(turtle);
+		}
+
+		[HttpGet]
+		public IActionResult Create()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public IActionResult Create(Turtle turtle)
+		{
+			_turtleService.AddTurtle(turtle);
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+		public IActionResult Edit(int id)
+		{
+			var turtle = _turtleService.GetTurtleById(id);
+			if (turtle == null)
+			{
+				return NotFound();
+			}
+			return View(turtle);
+		}
+
+		[HttpPost]
+		public IActionResult Edit(Turtle turtle)
+		{
+			_turtleService.UpdateTurtle(turtle);
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+		public IActionResult Delete(int id)
+		{
+			var turtle = _turtleService.GetTurtleById(id);
+			if (turtle == null)
+			{
+				return NotFound();
+			}
+			return View(turtle);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		public IActionResult DeleteConfirmed(int id)
+		{
+			_turtleService.DeleteTurtle(id);
+			return RedirectToAction(nameof(Index));
+		}
+	}
 }
