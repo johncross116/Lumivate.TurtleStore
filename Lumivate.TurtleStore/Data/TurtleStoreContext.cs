@@ -29,10 +29,12 @@ namespace Lumivate.TurtleStore.Data
 	// TODO-checkpoint-6 part A: Add DbSet properties for Orders and OrderItems:
 	//      public DbSet<Order> Orders { get; set; }
 	//      public DbSet<OrderItem> OrderItems { get; set; }
-	//   Then run the migration commands in the Package Manager Console
-	//   (Tools > NuGet Package Manager > Package Manager Console):
-	//     Add-Migration AddOrderTables
-	//     Update-Database
+
+	//   Then create a new migration. From your IDE's terminal
+	//   (View > Terminal in Visual Studio or VS Code), run:
+	//     dotnet ef migrations add AddOrderTables
+	//     dotnet ef database update
+
 	public class TurtleStoreContext : DbContext
 	{
 		public TurtleStoreContext(DbContextOptions<TurtleStoreContext> options) : base(options) { }
